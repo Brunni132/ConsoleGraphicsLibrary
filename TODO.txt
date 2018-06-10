@@ -1,0 +1,8 @@
+- TODO: remplacer les memcpy/memset par des méthodes dans XPALETTE
+- Error diffusion (tramage), to be applied with the source image (unreducted R8G8B8A8)
+	- http://stackoverflow.com/questions/9150338/besides-floydsteinberg-dithering-any-other-ways-to-dither-the-images should use Stucki
+	- Keep for each tile its position in the source image
+	- In case of indexed, there may be some problems because two similar tiles were reducted, but not identical in the source image; thus we'll generate the dithered tile out of the last tile which could be reduced once deflated (it should be ok)
+- Post-optimization of the tileset after multipalette reduction
+	- Error diffusion has to be done BEFORE that
+

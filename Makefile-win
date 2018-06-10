@@ -1,0 +1,34 @@
+# source files.
+SRC = ColorReduction.cpp ConsoleGraphics.cpp Palette.cpp Tileset.cpp ColorReductionMultipalette.cpp Conversion.cpp Map.cpp PlatformAware.cpp pugixml.cpp Image.cpp Image-win.cpp
+
+OBJ = $(SRC:.cpp=.o)
+
+OUT = libConsoleGraphicsLibrary.a
+
+# include directories
+INCLUDES = -I.
+
+# C++ compiler flags (-g -O2 -Wall)
+CCFLAGS = -g -O3
+
+# compiler
+CCC = gcc
+
+# library paths
+LIBS = -L../ -L/usr/local/lib -lm
+
+# compile flags
+LDFLAGS = -g
+
+.SUFFIXES: .cpp
+
+default: $(OUT)
+
+.cpp.o:
+	$(CCC) $(INCLUDES) $(CCFLAGS) -c $< -o $@
+
+$(OUT): $(OBJ)
+	ar rcs $(OUT) $(OBJ)
+
+clean:
+	rm -f $(OBJ) $(OUT) Makefile.bak
