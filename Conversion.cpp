@@ -90,7 +90,7 @@ ref<Image> mapWithMultipaletteAsImage(ref<Map> m, ref<Tileset> t, ref<Palette> p
 	return result;
 }
 
-void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conversionParams) {
+void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conversionParams, const char *layerName) {
 	Map *map = conversionParams.outMap;
 	Tileset *til = conversionParams.outTileset;
 	Palette *pal = conversionParams.outPalette;
@@ -110,7 +110,7 @@ void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conv
 	fprintf(f, "	<tileset firstgid=\"1\" name=\"tileset\" tilewidth=\"8\" tileheight=\"8\">\n");
 	fprintf(f, "	<image source=\"%s\" width=\"%d\" height=\"%d\"/>\n", imageNameToWrite, img.width, img.height);
 	fprintf(f, "	</tileset>\n");
-	fprintf(f, "	<layer name=\"Calque de Tile 1\" width=\"%d\" height=\"%d\">\n", map->width, map->height);
+	fprintf(f, "	<layer name=\"%s\" width=\"%d\" height=\"%d\">\n", layerName, map->width, map->height);
 	fprintf(f, "	<data encoding=\"csv\">\n");
 	// Write map data from here
 	for (int j = 0; j < map->height; j++) {
@@ -128,7 +128,7 @@ void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conv
 	fclose(f);
 }
 
-ref<Map> readMapFromTiledCsvProjectFile(const char *tmxFileName) {
+ref<Map> readMapFromTiledCsvProjectFile(const char *tmxFileName, const char *layerName) {
 	using namespace pugi;
 	xml_document doc;
 	xml_parse_result parseResult = doc.load_file(tmxFileName);
@@ -136,6 +136,12 @@ ref<Map> readMapFromTiledCsvProjectFile(const char *tmxFileName) {
 		return null;
 	// XML: map -> layer -> data
 	xml_node layer = doc.child("map").child("layer");
+	while (layer && layerName && strcmp(layer.attribute("name").value(), layerName) != 0)
+		layer = layer.next_sibling("layer");
+	if (!layer) {
+		printf("Could not find layer %s in %s\n", layerName, tmxFileName);
+		return null;
+	}
 	const char_t *data = layer.child_value("data");
 	// Get size and create map for that
 	int width = atoi(layer.attribute("width").value()), height = atoi(layer.attribute("height").value());

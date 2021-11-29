@@ -28,9 +28,9 @@ ref<Image> tilesetAsImage(ref<Tileset> tileset, ref<Palette> paletteIfAny, Pixel
 // Writes an image on the disc representing the visual output of the tilemap conversion, with multipalette support (useful to check without the hardware)
 ref<Image> mapWithMultipaletteAsImage(ref<Map> m, ref<Tileset> t, ref<Palette> p, PixelFormat &pf);
 // Utility to write a tiled project from a conversion (should be used initially, will generate an image too)
-void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conversionParams);
+void createTiledProjectFile(const char *tmxFileName, TilesetConversionData &conversionParams, const char* layerName = "Calque de Tile 1");
 // Utility to read a map from a CSV typed Tiled project file
-ref<Map> readMapFromTiledCsvProjectFile(const char *tmxFileName);
+ref<Map> readMapFromTiledCsvProjectFile(const char *tmxFileName, const char* layerName = nullptr);
 
 
 #endif
